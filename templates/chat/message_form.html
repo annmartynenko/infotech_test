@@ -1,0 +1,11 @@
+
+{% block content %}
+<p>
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit">
+    <input type="submit" value="Cancel" onclick="window.location.href='{% url 'chat:all' %}';return false;">
+  </form>
+</p>
+{% endblock %}

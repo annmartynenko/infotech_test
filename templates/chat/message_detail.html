@@ -1,0 +1,19 @@
+
+{% block content %}
+<span style="float: right;">
+({{ message.updated_at }})
+    {% if message.owner == user %}
+    <a href="{% url 'chat:message_update' message.id %}"><i class="fa fa-pencil"></i></a>
+    <a href="{% url 'chat:message_delete' message.id %}"><i class="fa fa-trash"></i></a>
+    {% endif %}
+</span>
+<p>
+	{{ message.text }}
+</p>
+    {% if message.image %}
+            <img src="{{ message.image.url }}">
+    {% endif %}
+<p>
+<a href="{% url 'chat:all' %}">All messages</a>
+</p>
+{% endblock %}
