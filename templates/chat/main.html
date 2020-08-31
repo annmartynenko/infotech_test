@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+{% block content %}
 <p>
 {% if user.is_authenticated %}
 <p>Authenticated as
@@ -15,3 +17,4 @@ Id: {{ user.id }}
 Some of the samples will require a user login to be created.
 </p>
 {% endif %}
+{% endblock %}
