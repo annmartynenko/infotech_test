@@ -6,20 +6,22 @@
     <a href="/messages?sort=old_to_new">Sort from old to new messages</a> <br>
     <a href="/messages?sort=new_to_old">Sort from new to old messages</a> <br>
     <a href="/messages?sort=last_day">Show all messages about 24 hours</a> <br>
-    {% if user != 'AnonymousUser' %}
-    <a href="/messages?sort=current_user">Show all messages from current user</a> <br>
-        {% endif %}
+    {% if user.is_authenticated %}
+        <a href="/messages?sort=current_user">Show all messages from current user</a> <br>
+    {% endif %}
 <ul>
   {% for message in message_list %}
     <li>
         <a href="{% url 'chat:message_detail'  message.id %}">{{ message.text }} </a>
         {% if message.image %}
-            <img src="{{ message.image.url }}">
+            <img src="{{ message.image.url }}" height="100">
         {% endif %}
-        <span>{{ message.created_at }}</span>
+        <span style="float: right;">{{ message.created_at }} </span>
+        <span style="float: right;">{{ message.owner }} --- </span>
         {% if message.owner == user %}
-        (<a href="{% url 'chat:message_update' message.id %}">Edit</a> |
-        <a href="{% url 'chat:message_delete' message.id %}">Delete</a>)
+
+            (<a href="{% url 'chat:message_update' message.id %}">Edit</a> |
+            <a href="{% url 'chat:message_delete' message.id %}">Delete</a>)
         {% endif %}
     </li>
   {% endfor %}

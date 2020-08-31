@@ -5,7 +5,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 from chat.models import Message
 from django.views.generic.edit import FormView
 from chat.forms import Registration
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -25,14 +25,16 @@ class MesssageCreateView(CreateView):
     def form_valid(self, form):
         print('form_valid called')
         object = form.save(commit=False)
-        object.owner = self.request.user
+        print(self.request.user)
+        if self.request.user.is_authenticated:
+            object.owner = self.request.user
         object.save()
         return super(CreateView, self).form_valid(form)
 
 
 class MesssageUpdateView(UpdateView):
     model = Message
-    fields = ['text']
+    fields = ['text', 'image']
 
     def get_queryset(self):
         print('update get_queryset called')
@@ -61,9 +63,8 @@ class MesssageListView(ListView):
             stuff = stuff.order_by('created_at').reverse()
         elif request.GET.get('sort') == 'last_day':
             stuff = stuff.filter(created_at__range=(timezone.now() - timedelta(hours=24), timezone.now()))
-        elif request.GET.get('sort') == 'current_user' and self.request.user != 'AnonymousUser':
+        elif request.GET.get('sort') == 'current_user' and self.request.user.is_authenticated:
             stuff = stuff.filter(owner=self.request.user)
-            print(self.request.user)
         return render(request, 'chat/message_list.html', {'message_list': stuff})
 
 
